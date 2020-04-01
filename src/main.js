@@ -6,31 +6,33 @@ const tripControls = tripMain.querySelector(`.trip-controls`);
 const tripEvents = document.querySelector(`.trip-events`);
 
 const siteNavigationTemplate = () => {
-  return (`<nav class="trip-controls__trip-tabs  trip-tabs">
-              <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
-              <a class="trip-tabs__btn" href="#">Stats</a>
-            </nav>`);
+  return (`<h2 class="visually-hidden">Switch trip view</h2>
+          <nav class="trip-controls__trip-tabs  trip-tabs">
+            <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
+            <a class="trip-tabs__btn" href="#">Stats</a>
+          </nav>`);
 };
 
 const siteFiltersTemplate = () => {
-  return (`<form class="trip-filters" action="#" method="get">
-              <div class="trip-filters__filter">
-                <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
-                <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-              </div>
+  return (`<h2 class="visually-hidden">Filter events</h2>
+          <form class="trip-filters" action="#" method="get">
+            <div class="trip-filters__filter">
+              <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
+              <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
+            </div>
 
-              <div class="trip-filters__filter">
-                <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
-                <label class="trip-filters__filter-label" for="filter-future">Future</label>
-              </div>
+            <div class="trip-filters__filter">
+              <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
+              <label class="trip-filters__filter-label" for="filter-future">Future</label>
+            </div>
 
-              <div class="trip-filters__filter">
-                <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
-                <label class="trip-filters__filter-label" for="filter-past">Past</label>
-              </div>
+            <div class="trip-filters__filter">
+              <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
+              <label class="trip-filters__filter-label" for="filter-past">Past</label>
+            </div>
 
-              <button class="visually-hidden" type="submit">Accept filter</button>
-            </form>`);
+            <button class="visually-hidden" type="submit">Accept filter</button>
+          </form>`);
 };
 
 const sortingTemplate = () => {
@@ -176,14 +178,17 @@ const editFormTemplate = () => {
           </form>`);
 };
 
-const tripPointsListTemplate = () => {
+const daysListTemplate = () => {
   return (`<ul class="trip-days">
-            <li class="trip-days__item  day">
+          </ul>`);
+};
+
+const dayTemplate = () => {
+  return (`<li class="trip-days__item  day">
               <div class="day__info"></div>
               <ul class="trip-events__list">
               </ul>
-            </li>
-          </ul>`);
+            </li>`);
 };
 
 const tripPointTemplate = () => {
@@ -246,11 +251,12 @@ const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
-render(tripControls.querySelector(`h2`), siteNavigationTemplate(), `afterend`);
+render(tripControls, siteNavigationTemplate());
 render(tripControls, siteFiltersTemplate());
-render(tripEvents.querySelector(`h2`), sortingTemplate(), `afterend`);
+render(tripEvents, sortingTemplate());
 render(tripEvents, editFormTemplate());
-render(tripEvents, tripPointsListTemplate());
+render(tripEvents, daysListTemplate());
+render(document.querySelector(`.trip-days`), dayTemplate());
 
 for (let i = 0; i < TRIP_ITEMS_NUMBER; i++) {
   render(document.querySelector(`.trip-events__list`), tripPointTemplate());
