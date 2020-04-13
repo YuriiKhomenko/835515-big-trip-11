@@ -8,6 +8,7 @@ import {createTripPointTemplate} from './components/tripPoint.js';
 import {createSectionWithInfoTemplate} from './components/infoSection.js';
 import {createTripInfoTemplate} from './components/tripInfo.js';
 import {createTripCostTemplate} from './components/tripCost.js';
+import {generateTrip} from './mock/trips.js';
 
 const TRIP_ITEMS_NUMBER = 3;
 const tripMain = document.querySelector(`.trip-main`);
@@ -21,12 +22,13 @@ const render = (container, template, place = `beforeend`) => {
 render(tripControls, createNavigationTemplate());
 render(tripControls, createFiltersTemplate());
 render(tripEvents, createSortingTemplate());
-render(tripEvents, createEditFormTemplate());
+render(tripEvents, createEditFormTemplate(generateTrip()));
 render(tripEvents, createDaysListTemplate());
 render(document.querySelector(`.trip-days`), createDayTemplate());
 
 for (let i = 0; i < TRIP_ITEMS_NUMBER; i++) {
-  render(document.querySelector(`.trip-events__list`), createTripPointTemplate());
+  const tripItem = generateTrip();
+  render(document.querySelector(`.trip-events__list`), createTripPointTemplate(tripItem));
 }
 
 render(tripMain, createSectionWithInfoTemplate(), `afterbegin`);
