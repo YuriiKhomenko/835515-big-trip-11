@@ -15,21 +15,21 @@ const generateOffersMarkup = (offersList) => {
 };
 
 export const createTripPointTemplate = (trip) => {
-  const {type, pretext, city, offers, price, dates} = trip;
+  const {type, action, city, offers, price, startDate, endDate, startDateMs, endDateMs} = trip;
   return (`<li class="trip-events__item">
                   <div class="event">
                     <div class="event__type">
                       <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
                     </div>
-                    <h3 class="event__title">${type} ${pretext} ${city}</h3>
+                    <h3 class="event__title">${type} ${action} ${city}</h3>
 
                     <div class="event__schedule">
                       <p class="event__time">
-                        <time class="event__start-time" datetime=${dates.startTimeDate}>${dates.startTime}</time>
+                        <time class="event__start-time" datetime=${startDate.toISOString().slice(0, 16)}>${startDate.toISOString().slice(11, 16)}</time>
                         —
-                        <time class="event__end-time" datetime=${dates.endTimeDate}>${dates.endTime}</time>
+                        <time class="event__end-time" datetime=${endDate.toISOString().slice(0, 16)}>${endDate.toISOString().slice(11, 16)}</time>
                       </p>
-                      <p class="event__duration">${dates.difference}H 00M</p>
+                      <p class="event__duration">${new Date(endDateMs - startDateMs).getHours() - 1}H ${new Date(endDateMs - startDateMs).getMinutes()}M</p>
                     </div>
 
                     <p class="event__price">

@@ -1,53 +1,81 @@
-const optionTypes = [`Book tickets`, `Add luggage`, `Switch to comfort`, `Add breakfast`, `Add dinner`, `Order Uber`];
+const optionTypes = [
+  {
+    type: `Add luggage`,
+    id: `luggage`,
+  },
+  {
+    type: `Switch to comfort class`,
+    id: `comfort`,
+  },
+  {
+    type: `Add meal`,
+    id: `meal`,
+  },
+  {
+    type: `Choose seats`,
+    id: `seats`,
+  },
+  {
+    type: `Travel by train`,
+    id: `train`,
+  },
+  {
+    type: `Order Uber`,
+    id: `uber`,
+  },
+];
 const tripTypes = [
   {
     type: `Check-in`,
-    pretext: `in`
+    action: `in`
   },
   {
     type: `Sightseeing`,
-    pretext: `in`
+    action: `in`
   },
   {
     type: `Restaurant`,
-    pretext: `in`
+    action: `in`
   },
   {
     type: `Taxi`,
-    pretext: `to`
+    action: `to`
   },
   {
     type: `Bus`,
-    pretext: `to`
+    action: `to`
   },
   {
     type: `Train`,
-    pretext: `to`
+    action: `to`
   },
   {
     type: `Transport`,
-    pretext: `to`
+    action: `to`
   },
   {
     type: `Ship`,
-    pretext: `to`
+    action: `to`
   },
   {
     type: `Flight`,
-    pretext: `to`
+    action: `to`
   },
   {
     type: `Drive`,
-    pretext: `to`
+    action: `to`
   },
 ];
 const cityList = [`Kyiv`, `Moscow`, `Warsaw`, `Amsterdam`, `Krakow`, `Berlin`];
 const description = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 
-const generateOption = (type) => {
+const generateOption = (option) => {
+  const {type, id, checked} = option;
   return {
+    id,
     type,
-    price: Math.floor(Math.random() * 100)
+    price: Math.floor(Math.random() * 100),
+    checked
   };
 };
 
@@ -80,18 +108,10 @@ const generateTripPhotos = () => {
   return tripPhotos;
 };
 
-const generateDates = () => {
-  const startDate = new Date();
-  const differenceMs = Math.max(Math.round(Math.random() * 3), 1) * 60 * 60 * 1000;
-  const newTimeMs = startDate.getTime() + differenceMs;
-  const endDate = new Date(newTimeMs);
-  return {
-    startTime: startDate.toISOString().slice(11, 16),
-    startTimeDate: startDate.toISOString().slice(0, 16),
-    endTime: endDate.toISOString().slice(11, 16),
-    endTimeDate: endDate.toISOString().slice(0, 16),
-    difference: differenceMs / (60 * 60 * 1000),
-  };
+const generateEndDate = () => {
+  const startDate = new Date().getTime() + 1.5 * 60 * 60 * 1000;
+  const endDate = new Date(startDate);
+  return endDate;
 };
 
 const generateTrip = () => {
@@ -101,8 +121,20 @@ const generateTrip = () => {
   trip.description = generateTripDescription();
   trip.photos = generateTripPhotos();
   trip.price = Math.max(Math.ceil(Math.random() * 500), 100);
-  trip.dates = generateDates();
+  trip.date = new Date().toISOString().slice(0, 10);
+  trip.startDateMs = new Date().getTime();
+  trip.startDate = new Date();
+  trip.endDateMs = generateEndDate().getTime();
+  trip.endDate = generateEndDate();
   return trip;
 };
 
-export {generateTrip};
+const generateTrips = (tripsAmount) => {
+  const tripItems = [];
+  for (let i = 0; i < tripsAmount; i++) {
+    tripItems.push(generateTrip());
+  }
+  return tripItems;
+};
+
+export {generateTrips};
