@@ -3,42 +3,47 @@ import {createFiltersTemplate} from './components/filter.js';
 import {createSortingTemplate} from './components/sorting.js';
 import {createEditFormTemplate} from './components/editForm.js';
 import {createDaysListTemplate} from './components/daysList.js';
-import {createDayTemplate, generateUniqueDays} from './components/day.js';
+import {createDayTemplate} from './components/day.js';
 import {createTripPointTemplate} from './components/tripPoint.js';
 import {createSectionWithInfoTemplate} from './components/infoSection.js';
 import {createTripInfoTemplate} from './components/tripInfo.js';
 import {createTripCostTemplate} from './components/tripCost.js';
-import {generateTrips} from './mock/trips.js';
-import {navigationTypes} from './mock/navigation.js';
-import {filters} from './mock/filter.js';
-import {sortTypes} from './mock/sorts.js';
+import {tripItems, dates} from './mock/trips.js';
+import {navigationTypes, filters, sortTypes} from './mock/consts.js';
 
-const TRIP_ITEMS_NUMBER = 5;
 const tripMain = document.querySelector(`.trip-main`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
 const tripEvents = document.querySelector(`.trip-events`);
-
-const tripItems = generateTrips(TRIP_ITEMS_NUMBER);
-const uniqueDays = generateUniqueDays(tripItems);
 
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
+const createNodeElement = (template) => {
+  const element = document.createElement(`div`);
+  element.innerHTML = template;
+  return element.firstChild;
+};
+
 render(tripControls, createNavigationTemplate(navigationTypes));
 render(tripControls, createFiltersTemplate(filters));
 render(tripEvents, createSortingTemplate(sortTypes));
-render(tripEvents, createEditFormTemplate(tripItems[0]));
 render(tripEvents, createDaysListTemplate());
 render(tripMain, createSectionWithInfoTemplate(), `afterbegin`);
-render(document.querySelector(`.trip-info`), createTripInfoTemplate());
-render(document.querySelector(`.trip-info`), createTripCostTemplate());
+render(document.querySelector(`.trip-info`), createTripInfoTemplate(tripItems, dates));
+render(document.querySelector(`.trip-info`), createTripCostTemplate(tripItems));
+render(tripEvents, createDaysListTemplate());
+render(document.querySelector(`.trip-sort`), createEditFormTemplate(tripItems[0]), `afterend`);
 
-uniqueDays.forEach((day, i) => {
-  render(document.querySelector(`.trip-days`), createDayTemplate(day, i));
-  tripItems.forEach((trip) => {
-    if (trip.date === day) {
-      render(document.querySelector(`.trip-events__list`), createTripPointTemplate(trip));
-    }
-  });
+
+dates.forEach((date, index) => {
+  const day = createNodeElement(createDayTemplate(date, index + 1));
+
+  tripItems
+    .filter((trip) => new Date(trip.startDate).toISOString().slice(0, 10) === date)
+    .forEach((trip) => {
+      render(day.querySelector(`.trip-events__list`), createTripPointTemplate(trip));
+    });
+
+  render(document.querySelector(`.trip-days`), day.parentElement.innerHTML);
 });

@@ -1,25 +1,15 @@
-const monthNames = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
+import {monthNames} from '../mock/consts.js';
 
-const createDayTemplate = (date, index) => {
-  const month = date.slice(6, 7);
-  const day = date.slice(8, 10);
+export const createDayTemplate = (dateString, counter) => {
+  const date = new Date(dateString);
+  const month = monthNames[date.getMonth() + 1];
+  const day = date.getDate();
   return (`<li class="trip-days__item  day">
               <div class="day__info">
-                <span class="day__counter">${index + 1}</span>
-                <time class="day__date" datetime="${date}">${monthNames[month]} ${day}</time>
+                <span class="day__counter">${counter}</span>
+                <time class="day__date" datetime="${dateString}">${month} ${day}</time>
               </div>
               <ul class="trip-events__list">
               </ul>
             </li>`);
 };
-
-const generateUniqueDays = (tripList) => {
-  const uniqueDatesSet = new Set();
-  tripList.forEach((trip) => {
-    uniqueDatesSet.add(trip.date);
-  });
-  const uniqueDates = Array.from(uniqueDatesSet);
-  return uniqueDates;
-};
-
-export {createDayTemplate, generateUniqueDays};
