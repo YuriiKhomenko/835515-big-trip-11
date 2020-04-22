@@ -46,6 +46,7 @@ export const createEditFormTemplate = (trip) => {
   const {type, action, description, photos, offers, startDate, endDate, price, favourite} = trip;
   const formatedStartDate = generateFormattedDate(startDate);
   const formatedEndDate = generateFormattedDate(endDate);
+  const offersMarkup = generateOffersMarkup(offers);
   return (`<form class="trip-events__item  event  event--edit" action="#" method="post">
             <header class="event__header">
               <div class="event__type-wrapper">
@@ -169,7 +170,7 @@ export const createEditFormTemplate = (trip) => {
             </header>
             <section class="event__details">
 
-              ${generateOffersMarkup(offers)}
+              ${offersMarkup}
               <section class="event__section  event__section--destination">
                 <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                 <p class="event__destination-description">${description}</p>
