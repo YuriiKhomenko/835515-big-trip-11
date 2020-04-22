@@ -8,27 +8,34 @@ import {createTripPointTemplate} from './components/tripPoint.js';
 import {createSectionWithInfoTemplate} from './components/infoSection.js';
 import {createTripInfoTemplate} from './components/tripInfo.js';
 import {createTripCostTemplate} from './components/tripCost.js';
+import {tripItems, dates} from './mock/trips.js';
+import {navigationTypes, filters, sortTypes} from './mock/consts.js';
+import {render, createNodeElement} from './components/util.js';
 
-const TRIP_ITEMS_NUMBER = 3;
 const tripMain = document.querySelector(`.trip-main`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
 const tripEvents = document.querySelector(`.trip-events`);
 
-const render = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
-};
-
-render(tripControls, createNavigationTemplate());
-render(tripControls, createFiltersTemplate());
-render(tripEvents, createSortingTemplate());
-render(tripEvents, createEditFormTemplate());
+render(tripControls, createNavigationTemplate(navigationTypes));
+render(tripControls, createFiltersTemplate(filters));
+render(tripEvents, createSortingTemplate(sortTypes));
 render(tripEvents, createDaysListTemplate());
-render(document.querySelector(`.trip-days`), createDayTemplate());
-
-for (let i = 0; i < TRIP_ITEMS_NUMBER; i++) {
-  render(document.querySelector(`.trip-events__list`), createTripPointTemplate());
-}
-
 render(tripMain, createSectionWithInfoTemplate(), `afterbegin`);
-render(document.querySelector(`.trip-info`), createTripInfoTemplate());
-render(document.querySelector(`.trip-info`), createTripCostTemplate());
+render(document.querySelector(`.trip-info`), createTripInfoTemplate(tripItems, dates));
+render(document.querySelector(`.trip-info`), createTripCostTemplate(tripItems));
+render(tripEvents, createDaysListTemplate());
+
+dates.forEach((date, index) => {
+  const day = createNodeElement(createDayTemplate(date, index + 1));
+
+  tripItems
+    .filter((trip) => new Date(trip.startDate).toISOString().slice(0, 10) === date)
+    .forEach((trip, i) => {
+      if (i === 0) {
+        render(day.querySelector(`.trip-events__list`), createEditFormTemplate(trip));
+      }
+      render(day.querySelector(`.trip-events__list`), createTripPointTemplate(trip));
+    });
+
+  render(document.querySelector(`.trip-days`), day.parentElement.innerHTML);
+});
