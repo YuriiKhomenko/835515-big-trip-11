@@ -26,12 +26,12 @@ render(document.querySelector(`.trip-info`), new TripCostComponent(tripItems).ge
 
 const renderTrip = (dayElement, trip) => {
   const onEditButtonClick = () => {
-    dayElement.replaceChild(EditTripComponent.getElement(), TripPointComponent.getElement());
+    dayElement.replaceChild(tripEditComponent.getElement(), tripPoint.getElement());
   };
 
   const onEditFormSubmit = (evt) => {
     evt.preventDefault();
-    dayElement.replaceChild(TripPointComponent.getElement(), EditTripComponent.getElement());
+    dayElement.replaceChild(tripPoint.getElement(), tripEditComponent.getElement());
   };
 
   const tripPoint = new TripPointComponent(trip);
