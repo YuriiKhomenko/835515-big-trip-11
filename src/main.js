@@ -39,7 +39,7 @@ const renderTrip = (dayElement, trip) => {
   editButton.addEventListener(`click`, onEditButtonClick);
 
   const tripEditComponent = new EditTripComponent(trip);
-  const editForm = tripEditComponent.getElement().querySelector(`form`);
+  const editForm = tripEditComponent.getElement();
   editForm.addEventListener(`submit`, onEditFormSubmit);
 
   render(dayElement, tripPoint.getElement(), RenderPosition.BEFOREEND);
