@@ -188,7 +188,7 @@ const createEditFormTemplate = (trip) => {
           </form>`);
 };
 
-export default class EditForm {
+export default class EditTrip {
   constructor(trip) {
     this._trip = trip;
     this._element = null;
