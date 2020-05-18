@@ -1,6 +1,7 @@
 import {monthNames} from '../mock/consts.js';
+import {createNodeElement} from './util.js';
 
-export const createDayTemplate = (dateString, counter) => {
+const createDayTemplate = (dateString, counter) => {
   const date = new Date(dateString);
   const month = monthNames[date.getMonth() + 1];
   const day = date.getDate();
@@ -13,3 +14,27 @@ export const createDayTemplate = (dateString, counter) => {
               </ul>
             </li>`);
 };
+
+export default class Day {
+  constructor(day, counter) {
+    this._day = day;
+    this._counter = counter;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createDayTemplate(this._day, this._counter);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createNodeElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

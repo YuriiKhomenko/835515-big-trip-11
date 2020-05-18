@@ -1,3 +1,5 @@
+import {createNodeElement} from './util.js';
+
 const generatePhoto = (src) => {
   return (`<img class="event__photo" src=${src} alt="Event photo">`);
 };
@@ -42,11 +44,12 @@ const generateFormattedDate = (number) => {
   return `${day}/${month < 10 ? `0` + month : month}/${year} ${hour < 10 ? `0` + hour : hour}:${minute < 10 ? `0` + minute : minute}`;
 };
 
-export const createEditFormTemplate = (trip) => {
+const createEditFormTemplate = (trip) => {
   const {type, action, description, photos, offers, startDate, endDate, price, favourite} = trip;
   const formatedStartDate = generateFormattedDate(startDate);
   const formatedEndDate = generateFormattedDate(endDate);
   const offersMarkup = generateOffersMarkup(offers);
+  const photosMarkup = generatePhotos(photos);
   return (`<form class="trip-events__item  event  event--edit" action="#" method="post">
             <header class="event__header">
               <div class="event__type-wrapper">
@@ -177,10 +180,33 @@ export const createEditFormTemplate = (trip) => {
 
                 <div class="event__photos-container">
                   <div class="event__photos-tape">
-                  ${generatePhotos(photos)}
+                  ${photosMarkup}
                   </div>
                 </div>
               </section>
             </section>
           </form>`);
 };
+
+export default class EditForm {
+  constructor(trip) {
+    this._trip = trip;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEditFormTemplate(this._trip);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createNodeElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

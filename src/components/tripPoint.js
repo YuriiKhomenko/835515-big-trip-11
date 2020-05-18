@@ -1,3 +1,5 @@
+import {createNodeElement} from './util.js';
+
 const generateOffer = (offer) => {
   const {type, price, isChecked} = offer;
   if (isChecked) {
@@ -18,7 +20,7 @@ const generateOffersMarkup = (offers) => {
           </ul>`);
 };
 
-export const createTripPointTemplate = (trip) => {
+const createTripPointTemplate = (trip) => {
   const {type, action, city, offers, price} = trip;
   const startDate = new Date(trip.startDate);
   const endDate = new Date(trip.endDate);
@@ -26,6 +28,7 @@ export const createTripPointTemplate = (trip) => {
   const dateDifference = new Date(endDate - startDate);
   const hours = dateDifference.getHours() - 1;
   const minutes = dateDifference.getMinutes();
+  const transformedHours = hours > 0 ? `${hours}H` : ``;
   return (`<li class="trip-events__item">
                   <div class="event">
                     <div class="event__type">
@@ -39,7 +42,7 @@ export const createTripPointTemplate = (trip) => {
                         —
                         <time class="event__end-time" datetime=${endDate.toISOString().slice(0, 16)}>${endDate.toISOString().slice(11, 16)}</time>
                       </p>
-                      <p class="event__duration">${hours > 0 ? hours + `H` : ``} ${minutes}M</p>
+                      <p class="event__duration">${transformedHours} ${minutes}M</p>
                     </div>
 
                     <p class="event__price">
@@ -54,3 +57,26 @@ export const createTripPointTemplate = (trip) => {
                   </div>
                 </li>`);
 };
+
+export default class TripPoint {
+  constructor(trip) {
+    this._trip = trip;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripPointTemplate(this._trip);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createNodeElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
