@@ -1,3 +1,5 @@
+import {createNodeElement} from './util.js';
+
 const createFilterMarkup = (filterName, isChecked) => {
   return (`<div class="trip-filters__filter">
               <input id="filter-${filterName.toLowerCase()}"
@@ -10,20 +12,33 @@ const createFilterMarkup = (filterName, isChecked) => {
             </div>`);
 };
 
-export const createFilterTemplate = (filters) => {
-  const filtersMarkup = filters.map((it, i) => createFilterMarkup(it, i === 0)).join(`\n`);
-  return (
-    `<section class="main__filter filter container">
-    ${filtersMarkup}
-    </section>`
-  );
-};
 
-export const createFiltersTemplate = (filters) => {
+const createFiltersTemplate = (filters) => {
   const filtersMarkup = filters.map((it, i) => createFilterMarkup(it, i === 0)).join(`\n`);
-  return (`<h2 class="visually-hidden">Filter events</h2>
-          <form class="trip-filters" action="#" method="get">
+  return (`<form class="trip-filters" action="#" method="get">
           ${filtersMarkup}
           <button class="visually-hidden" type="submit">Accept filter</button>
           </form>`);
 };
+
+export default class Filter {
+  constructor(filters) {
+    this._filters = filters;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFiltersTemplate(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createNodeElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -161,5 +161,4 @@ const generateTrips = (amount) => {
 const tripItems = generateTrips(TRIP_ITEMS_NUMBER);
 
 const dates = [...new Set(tripItems.map((it) => new Date(it.startDate).toISOString().slice(0, 10)))];
-
 export {tripItems, dates};
